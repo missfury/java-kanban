@@ -1,4 +1,4 @@
-package Tasks;
+package tasks;
 
 public class Task extends TaskTemplate {
 
@@ -7,6 +7,9 @@ public class Task extends TaskTemplate {
     }
     public Task(Integer id, String name, String description, TaskStatus status) {
         super(id, name, description, status);
+    }
+    public Task(Integer id, String name, String description) {
+        super(id, name, description);
     }
 
     @Override

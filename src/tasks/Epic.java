@@ -1,9 +1,9 @@
-package Tasks;
+package tasks;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Epic extends TaskTemplate {
+public class Epic extends Task {
 
     private List<Integer> subtaskList;
 
@@ -27,12 +27,8 @@ public class Epic extends TaskTemplate {
 
     @Override
     public String toString() {
-        return "\r\nEpic{" +
-                "epicId=" + getId() +
-                ", epicName='" + getName() + '\'' +
-                ", epicDescription='" + getDescription() + "'" +
-                ", epicSubtaskList=" + subtaskList +
-                ", epicStatus='" + getStatus() + "'" +
-                '}';
+       String result = super.toString().replaceAll("\\}$", "");
+        return result + ", SubtaskList=" + subtaskList + '}';
+
     }
 }

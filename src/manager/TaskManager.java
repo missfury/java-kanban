@@ -1,12 +1,12 @@
-package Manager;
+package manager;
 
-import Tasks.Epic;
-import Tasks.Subtask;
-import Tasks.Task;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 
 import java.util.*;
 
-import static Tasks.TaskStatus.*;
+import static tasks.TaskStatus.*;
 
 public class TaskManager {
 
@@ -101,11 +101,7 @@ public class TaskManager {
 
     //Обновление масштабной задачи
     public void updateEpic(Epic epic) {
-        Epic previousVersionOfEpic = epics.get(epic.getId());
-        for (Integer subtaskId : previousVersionOfEpic.getSubtaskList()) {
-            remove(subtaskId);
-        }
-
+        epic.setSubtaskList(epics.get(epic.getId()).getSubtaskList());
         epics.put(epic.getId(), epic);
         updateStatusOfEpic(epic.getId());
     }
@@ -145,7 +141,6 @@ public class TaskManager {
             if (Objects.equals(subtasks.get(key).getIdEpic(), id)) {
                 subtasks.remove(key);
                 if (subtasks.size() <= 1) {
-                    subtasks.clear();
                     break;
                 }
             }

@@ -1,9 +1,9 @@
-import Manager.TaskManager;
-import Tasks.Epic;
-import Tasks.Subtask;
-import Tasks.Task;
+import manager.TaskManager;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
 
-import static Tasks.TaskStatus.*;
+import static tasks.TaskStatus.*;
 
 public class Main {
 
@@ -11,26 +11,26 @@ public class Main {
 
         TaskManager taskManager = new TaskManager();
 
-        Integer firstTask = taskManager.addTask(new Task("Создать профиль в социальной сети Нельзяграм для " +
+        taskManager.addTask(new Task("Создать профиль в социальной сети Нельзяграм для " +
         "проекта NoName", "Загрузить логотип, заполнить поисковую строку и шапку профиля, " +
         "сделать обложки для highlights.", NEW));
-        Integer secondTask = taskManager.addTask(new Task("Отчет за декабрь по проекту " +
+        taskManager.addTask(new Task("Отчет за декабрь по проекту " +
         "R2D2", "Составить отчет по проекту, отправить заказчику не позднее 10 января ", NEW));
-        Integer firstEpic = taskManager.addEpic(new Epic("Провести аудит аккаунта компании" +
+        taskManager.addEpic(new Epic("Провести аудит аккаунта компании" +
         " SithAirlines", " Проанализировать аккаунта компании в соцсети Нельзяграм и" +
         " составить отчет."));
-        Integer firstSubtaskFirstEpic = taskManager.addSubtask(new Subtask("Оценить, насколько правильно" +
+        taskManager.addSubtask(new Subtask("Оценить, насколько правильно" +
         " заполнен профиль", "Проверить читаемость логотипа, релевантность имени аккаунта и " +
-        "поисковой строки, информативность описания.", NEW, firstEpic));
-        Integer secondSubtaskFirstEpic = taskManager.addSubtask(new Subtask("Оценить " +
+        "поисковой строки, информативность описания.", NEW, 3));
+        taskManager.addSubtask(new Subtask("Оценить " +
         "визуал", "Оценить качество визуального оформления ленты и highlights, проверить на " +
-        "соответствие трендам. ", NEW, firstEpic));
-        Integer secondEpic = taskManager.addEpic(new Epic("Запустить таргетированную рекламу для проекта" +
+        "соответствие трендам. ", NEW, 3));
+        taskManager.addEpic(new Epic("Запустить таргетированную рекламу для проекта" +
         " SithAirlines", " Оценить бюджет и запустить рекламную кампанию." +
         " Составить отчет с рекомендациями по масштабированию."));
-        Integer firstSubtaskSecondEpic = taskManager.addSubtask(new Subtask("Определить целевую " +
+        taskManager.addSubtask(new Subtask("Определить целевую " +
         "аудиторию", "Проанализировать аудиторию компании, сравнить с конкурентами, " +
-        "составить портрет покупателя.", NEW, secondEpic));
+        "составить портрет покупателя.", NEW, 6));
 
         System.out.println("\r\nСписок одиночных задач");
         System.out.println(taskManager.getTaskList().toString().replaceAll("^\\[|\\]$", ""));
@@ -39,12 +39,13 @@ public class Main {
         System.out.println("\r\nСписок подзадач");
         System.out.println(taskManager.getSubtaskList().toString().replaceAll("^\\[|\\]$", ""));
 
-        taskManager.updateTask(new Task(firstTask, "Новая задача", "", DONE));
-        taskManager.updateSubtask(new Subtask(firstSubtaskFirstEpic, "Оценить, насколько правильно заполнен" +
-        " профиль", "Проверить читаемость логотипа, релевантность имени аккаунта и поисковой строки, " +
-        "информативность описания.", IN_PROGRESS, firstEpic));
-        taskManager.updateEpic(new Epic(secondEpic, "Запустить таргетированную рекламу для" +
-        " проекта и составить отчет.", "", DONE));
+        taskManager.updateTask(new Task(1, "Новая задача", "Исправлено описание", DONE));
+        taskManager.updateSubtask(new Subtask(4, "Оценить, насколько правильно заполнен" +
+        " профиль", "И здесь исправлено описание.", IN_PROGRESS, 3));
+        taskManager.updateEpic(new Epic(6, "Запустить таргетированную рекламу для" +
+        " проекта и составить отчет.", "Выходит, что описание исправить можно. Но я все же добавила " +
+                "сеттер для описания в TaskTemplate, хотя он нигде не используется.", DONE));
+        taskManager.updateSubtask(new Subtask(7, "Новое название", "Новое описание", IN_PROGRESS, 6));
 
         System.out.println("\r\nСписок одиночных задач");
         System.out.println(taskManager.getTaskList().toString().replaceAll("^\\[|\\]$", ""));
@@ -53,9 +54,11 @@ public class Main {
         System.out.println("\r\nСписок подзадач");
         System.out.println(taskManager.getSubtaskList().toString().replaceAll("^\\[|\\]$", ""));
 
-        taskManager.remove(firstTask);
-        taskManager.remove(secondSubtaskFirstEpic);
-        taskManager.remove(secondEpic);
+        taskManager.remove(1);
+        taskManager.remove(5);
+        taskManager.remove(3);
+
+        taskManager.addTask(new Task("Еще одна новая задача", "", NEW));
 
         System.out.println("\r\nСписок одиночных задач");
         System.out.println(taskManager.getTaskList().toString().replaceAll("^\\[|\\]$", ""));

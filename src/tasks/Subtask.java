@@ -1,6 +1,6 @@
-package Tasks;
+package tasks;
 
-public class Subtask extends TaskTemplate {
+public class Subtask extends Task {
 
     private final Integer idEpic;
 
@@ -20,12 +20,8 @@ public class Subtask extends TaskTemplate {
 
     @Override
     public String toString() {
-        return "\r\nSubtask{" +
-                "subtaskId=" + getId() +
-                ", subtaskName='" + getName() + '\'' +
-                ", subtaskDescription='" + getDescription() + '\'' +
-                ", subtaskIdEpic=" + idEpic +
-                ", subtaskStatus='" + getStatus() +
-                "'}";
+        String result = super.toString().replaceAll("\\}$", "");
+        return result + ", IdEpic=" + idEpic + '}';
+
     }
 }
