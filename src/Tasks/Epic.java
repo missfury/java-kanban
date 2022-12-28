@@ -7,6 +7,11 @@ public class Epic extends TaskTemplate {
 
     private List<Integer> subtaskList;
 
+    public Epic(String name, String description) {
+        super(0, name, description);
+        subtaskList = new ArrayList<>();
+    }
+
     public Epic(Integer id, String name, String description, TaskStatus status) {
         super(id, name, description, status);
         subtaskList = new ArrayList<>();
@@ -22,7 +27,7 @@ public class Epic extends TaskTemplate {
 
     @Override
     public String toString() {
-        return "Epic{" +
+        return "\r\nEpic{" +
                 "epicId=" + getId() +
                 ", epicName='" + getName() + '\'' +
                 ", epicDescription='" + getDescription() + "'" +
