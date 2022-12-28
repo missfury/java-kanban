@@ -27,7 +27,7 @@ public class Epic extends Task {
 
     @Override
     public String toString() {
-       String result = super.toString().replaceAll("\\}$", "");
+        String result = super.toString().replaceAll("\\}$", "");
         return result + ", SubtaskList=" + subtaskList + '}';
 
     }
