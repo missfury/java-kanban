@@ -5,6 +5,8 @@ public class Task extends TaskTemplate {
     public Task(String name, String description, TaskStatus status) {
         super(0, name, description, status);
     }
+
+    //для взаимодействия с id при изменении задачи
     public Task(Integer id, String name, String description, TaskStatus status) {
         super(id, name, description, status);
     }

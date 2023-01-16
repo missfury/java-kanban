@@ -1,4 +1,5 @@
-import manager.TaskManager;
+import manager.InMemoryHistoryManager;
+import manager.InMemoryTaskManager;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -9,7 +10,8 @@ public class Main {
 
     public static void main(String[] args) {
 
-        TaskManager taskManager = new TaskManager();
+        InMemoryTaskManager taskManager = new InMemoryTaskManager();
+        InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
 
         taskManager.addTask(new Task("Создать профиль в социальной сети Нельзяграм для " +
         "проекта NoName", "Загрузить логотип, заполнить поисковую строку и шапку профиля, " +
@@ -66,6 +68,33 @@ public class Main {
         System.out.println(taskManager.getEpicList().toString().replaceAll("^\\[|\\]$", ""));
         System.out.println("\r\nСписок подзадач");
         System.out.println(taskManager.getSubtaskList().toString().replaceAll("^\\[|\\]$", ""));
+
+        taskManager.getSubtaskByID(7);
+        taskManager.getEpicByID(6);
+        taskManager.getTaskByID(2);
+        taskManager.getTaskByID(8);
+
+        System.out.println("\r\nИстория просмотров");
+        System.out.println(inMemoryHistoryManager.getHistory().toString().replaceAll("^\\[|\\]$", ""));
+
+        taskManager.addTask(new Task("Задача 5", "Описание задачи 5", NEW));
+        taskManager.addTask(new Task("Задача 6", "Описание задачи 6", NEW));
+        taskManager.addTask(new Task("Задача 7", "Описание задачи 7", NEW));
+        taskManager.addTask(new Task("Задача 8", "Описание задачи 8", NEW));
+        taskManager.addTask(new Task("Задача 9", "Описание задачи 9", NEW));
+        taskManager.addTask(new Task("Задача 10", "Описание задачи 10", NEW));
+        taskManager.addTask(new Task("Задача 11", "Описание задачи 11", NEW));
+
+        taskManager.getTaskByID(9);
+        taskManager.getTaskByID(10);
+        taskManager.getTaskByID(11);
+        taskManager.getTaskByID(12);
+        taskManager.getTaskByID(13);
+        taskManager.getTaskByID(14);
+        taskManager.getTaskByID(15);
+
+        System.out.println("\r\nИстория просмотров");
+        System.out.println(inMemoryHistoryManager.getHistory().toString().replaceAll("^\\[|\\]$", ""));
 
     }
 }
