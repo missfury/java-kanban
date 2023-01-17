@@ -1,8 +1,11 @@
-import manager.InMemoryHistoryManager;
-import manager.InMemoryTaskManager;
+import manager.Managers;
+import manager.TaskManager;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
+import tasks.TaskTemplate;
+
+import java.util.List;
 
 import static tasks.TaskStatus.*;
 
@@ -10,8 +13,9 @@ public class Main {
 
     public static void main(String[] args) {
 
-        InMemoryTaskManager taskManager = new InMemoryTaskManager();
-        InMemoryHistoryManager inMemoryHistoryManager = new InMemoryHistoryManager();
+        TaskManager taskManager = Managers.getDefault();
+        List<TaskTemplate> getHistory = Managers.getDefaultHistory();
+
 
         taskManager.addTask(new Task("Создать профиль в социальной сети Нельзяграм для " +
         "проекта NoName", "Загрузить логотип, заполнить поисковую строку и шапку профиля, " +
@@ -75,7 +79,7 @@ public class Main {
         taskManager.getTaskByID(8);
 
         System.out.println("\r\nИстория просмотров");
-        System.out.println(inMemoryHistoryManager.getHistory().toString().replaceAll("^\\[|\\]$", ""));
+        System.out.println(getHistory.toString().replaceAll("^\\[|\\]$", ""));
 
         taskManager.addTask(new Task("Задача 5", "Описание задачи 5", NEW));
         taskManager.addTask(new Task("Задача 6", "Описание задачи 6", NEW));
@@ -92,9 +96,10 @@ public class Main {
         taskManager.getTaskByID(13);
         taskManager.getTaskByID(14);
         taskManager.getTaskByID(15);
+        taskManager.getTaskByID(1500);
 
         System.out.println("\r\nИстория просмотров");
-        System.out.println(inMemoryHistoryManager.getHistory().toString().replaceAll("^\\[|\\]$", ""));
+        System.out.println(getHistory.toString().replaceAll("^\\[|\\]$", ""));
 
     }
 }
