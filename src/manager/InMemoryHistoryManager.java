@@ -15,12 +15,14 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void historyAdd(TaskTemplate task) {
         if (task != null) {
-            int id = task.getId();
-            remove(id);
+            int idTask = task.getId();
+            remove(idTask);
             linkLast(task);
-            historyMap.put(task.getId(), tail);
+            historyMap.put(idTask, tail);
             System.out.println("\r\nЗадача просмотрена");
+
         } else {
+            removeNode(tail);
             System.out.println("\r\nЗадачи с таким ID не существует");
         }
     }
@@ -37,6 +39,13 @@ public class InMemoryHistoryManager implements HistoryManager {
     public void remove(int id) {
         removeNode(historyMap.get(id));
         historyMap.remove(id);
+    }
+
+    //
+    @Override
+    public void updateId(TaskTemplate task) {
+        int idTask = task.getId();
+        historyMap.put(idTask, tail);
     }
 
     // Добавление задачи в конец списка

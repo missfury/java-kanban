@@ -14,4 +14,7 @@ public interface HistoryManager {
 
     // Удалить задачу из листа просмотренных
     void remove(int id);
+
+
+    void updateId(TaskTemplate task);
 }

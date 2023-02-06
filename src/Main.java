@@ -58,5 +58,12 @@ public class Main {
         System.out.println("\r\nИстория просмотров");
         System.out.println(manager.history().toString().replaceAll("^\\[|\\]$", ""));
 
+        Task task2 = manager.getTaskByID(2);
+        task2.setId(22);
+        manager.updateTask(task2);
+        System.out.println(manager.getTaskByID(22));
+        System.out.println("\r\nИстория просмотров");
+        System.out.println(manager.history().toString().replaceAll("^\\[|\\]$", ""));
+
     }
 }
