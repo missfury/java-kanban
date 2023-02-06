@@ -4,6 +4,7 @@ package manager;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
+import tasks.TaskTemplate;
 
 import java.util.List;
 
@@ -72,17 +73,6 @@ public interface TaskManager {
     // Обновление статуса масштабной задачи в зависимости от статусов подзадач
     void updateStatusOfEpic(Integer epicId);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // Получить список просмотренных
+    List<TaskTemplate> history();
 }

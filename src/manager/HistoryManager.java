@@ -11,4 +11,7 @@ public interface HistoryManager {
 
     // Отображение последних просмотренных пользователем задач
     List<TaskTemplate>  getHistory();
+
+    // Удалить задачу из листа просмотренных
+    void remove(int id);
 }
