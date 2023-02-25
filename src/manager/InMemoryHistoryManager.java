@@ -8,6 +8,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     public Node<TaskTemplate> head;
     public Node<TaskTemplate> tail;
+    private  int size = 0;
     private Map<Integer, Node<TaskTemplate>> historyMap = new HashMap<>();
 
 
@@ -19,11 +20,9 @@ public class InMemoryHistoryManager implements HistoryManager {
             remove(idTask);
             linkLast(task);
             historyMap.put(idTask, tail);
-            System.out.println("\r\nЗадача просмотрена");
 
         } else {
             removeNode(tail);
-            System.out.println("\r\nЗадачи с таким ID не существует");
         }
     }
 
@@ -31,6 +30,10 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public List<TaskTemplate> getHistory() {
         return getTasks();
+    }
+
+    public int getSize() {
+        return size;
     }
 
 

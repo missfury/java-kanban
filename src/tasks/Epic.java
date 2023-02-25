@@ -7,7 +7,12 @@ public class Epic extends Task {
 
     private List<Integer> subtaskList;
 
-    public Epic(String name, String description, TaskStatus status) {
+    public Epic(String name, String description, TaskStatus status ) {
+        super(0, name, description);
+        subtaskList = new ArrayList<>();
+    }
+
+    public Epic(String name, String description, TaskStatus status, List<Integer> subtaskList ) {
         super(0, name, description);
         subtaskList = new ArrayList<>();
     }
@@ -16,6 +21,7 @@ public class Epic extends Task {
         super(id, name, description, status);
         subtaskList = new ArrayList<>();
     }
+
 
     public List<Integer> getSubtaskList() {
         return subtaskList;
@@ -30,5 +36,11 @@ public class Epic extends Task {
         String result = super.toString().replaceAll("\\}$", "");
         return result + ", SubtaskList=" + subtaskList + '}';
 
+    }
+
+    @Override
+    public String toStringFromFile() {
+        String result = super.toStringFromFile();
+        return result;
     }
 }

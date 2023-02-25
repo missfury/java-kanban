@@ -4,6 +4,7 @@ public class Subtask extends Task {
 
     private final Integer idEpic;
 
+
     public Subtask(String name, String description, TaskStatus status, Integer idEpic) {
         super(0, name, description, status);
         this.idEpic = idEpic;
@@ -18,10 +19,18 @@ public class Subtask extends Task {
         return idEpic;
     }
 
+
+
     @Override
     public String toString() {
         String result = super.toString().replaceAll("\\}$", "");
         return result + ", IdEpic=" + idEpic + '}';
 
+    }
+
+    @Override
+    public String toStringFromFile() {
+        String result = super.toStringFromFile();
+        return result + idEpic;
     }
 }

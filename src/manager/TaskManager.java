@@ -75,4 +75,12 @@ public interface TaskManager {
 
     // Получить список просмотренных
     List<TaskTemplate> history();
+
+    void save();
+
+
+
+
+
+
 }

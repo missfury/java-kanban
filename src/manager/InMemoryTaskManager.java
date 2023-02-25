@@ -5,19 +5,24 @@ import tasks.Subtask;
 import tasks.Task;
 import tasks.TaskTemplate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static tasks.TaskStatus.*;
 
 public class InMemoryTaskManager implements TaskManager {
 
-    private final Map<Integer, Task> tasks;
-    private final Map<Integer, Subtask> subtasks;
-    private final Map<Integer, Epic> epics;
+    protected int id;
+    protected Map<Integer, Task> tasks;
+    protected Map<Integer, Subtask> subtasks;
+    protected Map<Integer, Epic> epics;
     private Integer nextId;
-    private HistoryManager historyManager;
+    protected HistoryManager historyManager;
 
     public InMemoryTaskManager() {
+        id = 0;
         this.tasks = new HashMap<>();
         this.subtasks = new HashMap<>();
         this.epics = new HashMap<>();
@@ -250,6 +255,30 @@ public class InMemoryTaskManager implements TaskManager {
             list.add(subtasks.get(subtask));
         }
         return list;
+    }
+
+    @Override
+    public void save() {
+
+    }
+
+
+    private boolean isEpic(TaskTemplate task) {
+        return task.getClass().equals(Epic.class);
+    }
+
+    private boolean isSubtask(TaskTemplate task) {
+        return task.getClass().equals(Subtask.class);
+    }
+
+    private boolean isSubtaskItself(TaskTemplate task) {
+        return ((Subtask) task).getIdEpic().equals(task.getId());
+    }
+
+    private boolean isSubtaskToSubtask(TaskTemplate task) {
+        Subtask subtask = (Subtask) task;
+        Task checkTask = subtasks.get(subtask.getIdEpic());
+        return (checkTask.getClass().equals(Subtask.class));
     }
 
     // Вызов просмотра истории

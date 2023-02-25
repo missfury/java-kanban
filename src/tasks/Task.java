@@ -14,6 +14,11 @@ public class Task extends TaskTemplate {
         super(id, name, description);
     }
 
+    public TypeOfTask getType() {
+        return super.getType();
+    }
+
+
     @Override
     public String toString() {
         return "\r\nTask{" +
@@ -22,5 +27,11 @@ public class Task extends TaskTemplate {
                 ", taskDescription='" + getDescription() + "'" +
                 ", taskStatus='" + getStatus() +
                 "'}";
+    }
+
+    @Override
+    public String toStringFromFile() {
+        String result = super.toStringFromFile();
+        return result;
     }
 }
