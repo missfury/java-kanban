@@ -19,7 +19,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     private static final String SEPARATOR = ",";
     private static final String HEAD = "id,type,name,status,description,epicID";
     private static final String NEW_LINE = "\n";
-    protected HistoryManager historyManager = Managers.getDefaultHistory();
+
+
 
     public Path getTasksFile() {
         return fileName;
@@ -156,6 +157,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     public static FileBackedTasksManager loadFromFile(Path file) {
         int idCounter = 0;
+        Map<Integer, Task> taskMap = new HashMap<>();
         if (!Files.exists(file)) {
             return new FileBackedTasksManager();
         }
@@ -171,12 +173,15 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                     TaskTemplate task = fromString(line);
                     if (task.getType().equals(TypeOfTask.TASK)) {
                         fileManager.tasks.put(task.getId(), (Task) task);
+                        taskMap.put(task.getId(), (Task) task);
                     }
                     else if (task.getType().equals(TypeOfTask.EPIC)) {
                         fileManager.epics.put(task.getId(), (Epic) task);
+                        taskMap.put(task.getId(), (Epic) task);
                     }
                     else if (task.getType().equals(TypeOfTask.SUBTASK)) {
                         fileManager.subtasks.put(task.getId(), (Subtask) task);
+                        taskMap.put(task.getId(), (Subtask) task);
                     }
                     Integer intermediate = task.getId();
                     if (idCounter < intermediate) {
@@ -190,12 +195,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                     } else {
                         ArrayList<Integer> historyIdTasks = (ArrayList<Integer>) historyFromString(line);
                         for (int id : historyIdTasks) {
-                            Task task = fileManager.tasks.get(id);
-                            Epic epic = fileManager.epics.get(id);
-                            Subtask subtask = fileManager.subtasks.get(id);
+                            TaskTemplate task = taskMap.get(id);
                             fileManager.historyManager.historyAdd(task);
-                            fileManager.historyManager.historyAdd(epic);
-                            fileManager.historyManager.historyAdd(subtask);
                         }
                     }
                 }

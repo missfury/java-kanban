@@ -47,6 +47,7 @@ public class Main {
         TaskManager manager1 = FileBackedTasksManager.loadFromFile(Path.of("data/data.csv"));
 
 
+
         System.out.println("\r\nИстория просмотров");
         System.out.println(manager1.history().toString().replaceAll("^\\[|\\]$", ""));
         System.out.println("\r\nСписок одиночных задач");

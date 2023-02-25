@@ -7,3 +7,4 @@ id,type,name,status,description,epicID
 5,SUBTASK,Подзадача 2 эпика 1,NEW,Описание подзадачи,3
 6,SUBTASK,Подзадача 3 эпика 1,NEW,Описание подзадачи,3
 
+1,3,2,6,4,5,7,
