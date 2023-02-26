@@ -14,13 +14,11 @@ public class Epic extends Task {
 
     public Epic(String name, String description, TaskStatus status, List<Integer> subtaskList ) {
         super(0, name, description);
-        subtaskList = new ArrayList<>();
+        this.status = status;
+        this.subtaskList = new ArrayList<>();
     }
 
-    public Epic(Integer id, String name, String description, TaskStatus status) {
-        super(id, name, description, status);
-        subtaskList = new ArrayList<>();
-    }
+
 
 
     public List<Integer> getSubtaskList() {
@@ -42,5 +40,9 @@ public class Epic extends Task {
     public String toStringFromFile() {
         String result = super.toStringFromFile();
         return result;
+    }
+    @Override
+    public TypeOfTask getType() {
+        return super.getType();
     }
 }

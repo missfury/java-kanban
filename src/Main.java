@@ -42,10 +42,12 @@ public class Main {
         System.out.println("\r\nСписок подзадач");
         System.out.println(manager.getSubtaskList().toString().replaceAll("^\\[|\\]$", ""));
 
-
+        System.out.println("!!!!!");
+        Task task1 = manager.getTaskByID(1);
+        Epic task2 = manager.getEpicByID(3);
+        Subtask task3 = manager.getSubtaskByID(5);
 
         TaskManager manager1 = FileBackedTasksManager.loadFromFile(Path.of("data/data.csv"));
-
 
 
         System.out.println("\r\nИстория просмотров");
@@ -56,6 +58,15 @@ public class Main {
         System.out.println(manager1.getEpicList().toString().replaceAll("^\\[|\\]$", ""));
         System.out.println("\r\nСписок подзадач");
         System.out.println(manager1.getSubtaskList().toString().replaceAll("^\\[|\\]$", ""));
+
+        System.out.println("!!!!!");
+        Task task4 = manager1.getTaskByID(1);
+        Epic task5 = manager1.getEpicByID(3);
+        Subtask task6 = manager1.getSubtaskByID(5);
+        System.out.println("\r\nИстория просмотров");
+        System.out.println(manager1.history().toString().replaceAll("^\\[|\\]$", ""));
+        System.out.println("\r\nСписок одиночных задач");
+
 
 
     }

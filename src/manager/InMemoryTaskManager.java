@@ -15,11 +15,11 @@ import static tasks.TaskStatus.*;
 public class InMemoryTaskManager implements TaskManager {
 
     protected int id;
-    protected Map<Integer, Task> tasks;
-    protected Map<Integer, Subtask> subtasks;
-    protected Map<Integer, Epic> epics;
-    private Integer nextId;
-    protected HistoryManager historyManager;
+    protected static Map<Integer, Task> tasks;
+    protected static Map<Integer, Subtask> subtasks;
+    protected static Map<Integer, Epic> epics;
+    protected Integer nextId;
+    protected static HistoryManager historyManager;
 
     public InMemoryTaskManager() {
         id = 0;
@@ -33,14 +33,16 @@ public class InMemoryTaskManager implements TaskManager {
     // Добавление задачи типа "одиночная задача"
     @Override
     public Integer addTask(Task task) {
-        task.setId(nextId++);
+        setNextId(nextId);
+        task.setId(nextId);
         tasks.put(task.getId(), task);
-        return nextId - 1;
+        return nextId++;
     }
 
     // Добавление задачи типа "масштабная задача с подзадачами"
     @Override
     public Integer addEpic (Epic epic) {
+        setNextId(nextId);
         epic.setId(nextId++);
         epic.setStatus(NEW);
         List<Integer> epicList = updateSubtasksEpicInside(epic);
@@ -53,6 +55,7 @@ public class InMemoryTaskManager implements TaskManager {
     // Добавление задачи типа "подзадача в составе масштабной задачи"
     @Override
     public Integer addSubtask(Subtask subtask) {
+        setNextId(nextId);
         subtask.setId(nextId++);
         subtasks.put(subtask.getId(), subtask);
         List<Integer> subtaskList = updateSubtasksEpicInside(epics.get(subtask.getIdEpic()));
@@ -206,22 +209,25 @@ public class InMemoryTaskManager implements TaskManager {
     //Получение одиночной задачи по идентификатору
     @Override
     public Task getTaskByID(Integer id) {
-        historyManager.historyAdd(tasks.get(id));
-
-        return tasks.get(id);
+        setNextId(nextId);
+        Task task = tasks.getOrDefault(id, null);
+        historyManager.historyAdd(task);
+        return task;
     }
 
     //Получение масштабной задачи по идентификатору
     @Override
     public Epic getEpicByID(Integer id) {
-        historyManager.historyAdd(epics.get(id));
-
-        return epics.get(id);
+        setNextId(nextId);
+        Epic epic = epics.getOrDefault(id, null);
+        historyManager.historyAdd(epic);
+        return epic;
     }
 
     //Получение подзадачи по идентификатору
     @Override
     public Subtask getSubtaskByID(Integer id) {
+        setNextId(nextId);
         historyManager.historyAdd(subtasks.get(id));
 
         return subtasks.get(id);
@@ -257,17 +263,28 @@ public class InMemoryTaskManager implements TaskManager {
         return list;
     }
 
+    public int getNextId() {
+        return nextId;
+    }
+
+    public int setNextId(int id) {
+        if (nextId <= 1) {
+            nextId = getTaskList().size()+getEpicList().size()+getSubtaskList().size()+1;
+        }
+        return nextId;
+    }
+
     @Override
     public void save() {
 
     }
 
 
-    private boolean isEpic(TaskTemplate task) {
+    protected boolean isEpic(TaskTemplate task) {
         return task.getClass().equals(Epic.class);
     }
 
-    private boolean isSubtask(TaskTemplate task) {
+    boolean isSubtask(TaskTemplate task) {
         return task.getClass().equals(Subtask.class);
     }
 
@@ -283,6 +300,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     // Вызов просмотра истории
     public List<TaskTemplate> history() {
+        setNextId(nextId);
         return historyManager.getHistory();
     }
 }

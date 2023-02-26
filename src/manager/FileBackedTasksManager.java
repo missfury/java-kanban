@@ -20,7 +20,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     private static final String HEAD = "id,type,name,status,description,epicID";
     private static final String NEW_LINE = "\n";
 
-
+    static InMemoryTaskManager taskManager = new InMemoryTaskManager();
 
     public Path getTasksFile() {
         return fileName;
@@ -39,6 +39,13 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         this.fileName = DEFAULT_FILE;
     }
 
+    @Override
+    public int setNextId(int nextId) {
+        if (taskManager.nextId <= 1) {
+            taskManager.nextId = getTaskList().size()+getEpicList().size()+getSubtaskList().size()+1;
+        }
+        return taskManager.nextId;
+    }
 
     public String getRealPath(Path path) {
         String filePath = null;
@@ -94,13 +101,20 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             fileWriter.write(HEAD + NEW_LINE);
             if (taskList != null || epicList != null || subtaskList != null) {
                 for (Task task : taskList) {
+
                     fileWriter.write(toString(task) + NEW_LINE);
+
                 }
                 for (Epic epic : epicList) {
-                    fileWriter.write(toString(epic) + NEW_LINE);
+                    if (epicList.contains(epic)) {
+                        fileWriter.write(toString(epic) + NEW_LINE);
+                    }
                 }
                 for (Subtask subtask : subtaskList) {
-                    fileWriter.write(toString(subtask) + NEW_LINE);
+                    if (subtaskList.contains(subtask)) {
+                        fileWriter.write(toString(subtask) + NEW_LINE);
+                    }
+
                 }
                 fileWriter.write(NEW_LINE);
                 String history = historyToString(historyManager);
@@ -157,6 +171,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     public static FileBackedTasksManager loadFromFile(Path file) {
         int idCounter = 0;
+        Integer intermediate;
         Map<Integer, Task> taskMap = new HashMap<>();
         if (!Files.exists(file)) {
             return new FileBackedTasksManager();
@@ -170,25 +185,38 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                     if (line.equals(HEAD)) {
                         continue;
                     }
-                    TaskTemplate task = fromString(line);
-                    if (task.getType().equals(TypeOfTask.TASK)) {
-                        fileManager.tasks.put(task.getId(), (Task) task);
-                        taskMap.put(task.getId(), (Task) task);
-                    }
-                    else if (task.getType().equals(TypeOfTask.EPIC)) {
-                        fileManager.epics.put(task.getId(), (Epic) task);
-                        taskMap.put(task.getId(), (Epic) task);
-                    }
-                    else if (task.getType().equals(TypeOfTask.SUBTASK)) {
-                        fileManager.subtasks.put(task.getId(), (Subtask) task);
-                        taskMap.put(task.getId(), (Subtask) task);
-                    }
-                    Integer intermediate = task.getId();
-                    if (idCounter < intermediate) {
-                        idCounter = intermediate;
-                    }
 
-                } else {
+                    TypeOfTask taskType = TypeOfTask.valueOf(line.split(",")[1]);
+                    switch (taskType) {
+                        case EPIC:
+                            Epic epic = (Epic) fromString(line);
+                            intermediate = epic.getId();
+                            if (idCounter < intermediate) {
+                                idCounter = intermediate;
+                            }
+                            fileManager.epics.put(intermediate, epic);
+                            taskMap.put(intermediate, epic);
+                            break;
+                        case SUBTASK:
+                            Subtask subtask = (Subtask) fromString(line);
+                            intermediate = subtask.getId();
+                            if (idCounter < intermediate) {
+                                idCounter = intermediate;
+                            }
+                            fileManager.subtasks.put(intermediate, subtask);
+                            taskMap.put(intermediate, subtask);
+                            break;
+                        case TASK:
+                            Task commonTask = (Task) fromString(line);
+                            intermediate = commonTask.getId();
+                            if (idCounter < intermediate) {
+                                idCounter = intermediate;
+                            }
+                            fileManager.tasks.put(intermediate, commonTask);
+                            taskMap.put(intermediate, commonTask);
+                            break;
+                    }
+                }   else {
                     line = reader.readLine();
                     if (line == null) {
                         fileManager.historyManager = null;
@@ -198,6 +226,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                             TaskTemplate task = taskMap.get(id);
                             fileManager.historyManager.historyAdd(task);
                         }
+
                     }
                 }
             }
@@ -212,6 +241,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     @Override
     public Integer addTask(Task task) {
+        setNextId(nextId);
         Integer taskId = super.addTask(task);
         this.save();
         return taskId;
@@ -219,6 +249,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     @Override
     public Integer addEpic(Epic epic) {
+        setNextId(nextId);
         Integer epicId = super.addEpic(epic);
         this.save();
         return epicId;
@@ -226,6 +257,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     @Override
     public Integer addSubtask(Subtask subtask) {
+        setNextId(nextId);
         Integer subtaskId = super.addSubtask(subtask);
         this.save();
         return subtaskId;
@@ -312,6 +344,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     @Override
     public Task getTaskByID(Integer id) {
+        setNextId(nextId);
         Task task = super.getTaskByID(id);
         save();
         return task;
@@ -319,6 +352,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     @Override
     public Epic getEpicByID(Integer id) {
+        setNextId(nextId);
         Epic epic = super.getEpicByID(id);
         save();
         return epic;
@@ -326,6 +360,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     @Override
     public Subtask getSubtaskByID(Integer id) {
+        setNextId(nextId);
         Subtask subtask = super.getSubtaskByID(id);
         save();
         return subtask;
@@ -333,7 +368,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     @Override
     public List<TaskTemplate> history() {
+        setNextId(nextId);
         List<TaskTemplate> list = super.history();
+        taskManager.setNextId(list.size());
         return list;
     }
 
