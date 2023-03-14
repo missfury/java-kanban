@@ -57,10 +57,10 @@ public class Main {
         manager.getTaskByID(2).setDuration(50);
         manager.getTaskByID(8).setStartTime("10:01 14.03.2023");
         manager.getTaskByID(8).setDuration(50);
-        manager.updateEpic(manager.getEpicByID(3));
-        manager.updateSubtask(manager.getSubtaskByID(5));
+        manager.updateEpic(task5);
+        manager.updateSubtask(task6);
         manager.updateTask(manager.getTaskByID(8));
-        manager.updateTask(manager.getTaskByID(1));
+        manager.updateTask(task4);
         manager.updateTask(manager.getTaskByID(2));
         System.out.println("\r\nИстория просмотров");
         System.out.println(manager.history().toString().replaceAll("^\\[|\\]$", ""));

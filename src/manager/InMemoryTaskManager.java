@@ -22,9 +22,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     public InMemoryTaskManager() {
         id = 0;
-        this.tasks = new HashMap<>();
-        this.subtasks = new HashMap<>();
-        this.epics = new HashMap<>();
+        tasks = new HashMap<>();
+        subtasks = new HashMap<>();
+        epics = new HashMap<>();
         this.nextId = 1;
         historyManager = Managers.getDefaultHistory();
         taskMap = new HashMap<>();
@@ -270,7 +270,6 @@ public class InMemoryTaskManager implements TaskManager {
     //Получение списка одиночных задач
     @Override
     public List<Task> getTaskList() {
-        getPrioritizedTasks();
         List<Task> list = new ArrayList<>();
         for (Integer task : tasks.keySet()) {
             list.add(tasks.get(task));
@@ -281,7 +280,6 @@ public class InMemoryTaskManager implements TaskManager {
     //Получение списка масштабных задач
     @Override
     public List<Epic>getEpicList() {
-        getPrioritizedTasks();
         List<Epic> list = new ArrayList<>();
         for (Integer epic : epics.keySet()) {
             list.add(epics.get(epic));
@@ -292,7 +290,6 @@ public class InMemoryTaskManager implements TaskManager {
     // Получение списка подзадач
     @Override
     public List<Subtask>getSubtaskList() {
-        getPrioritizedTasks();
         List<Subtask> list = new ArrayList<>();
         for (Integer subtask : subtasks.keySet()) {
             list.add(subtasks.get(subtask));

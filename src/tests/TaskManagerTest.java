@@ -2,6 +2,8 @@ package tests;
 
 import manager.TaskManager;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
@@ -70,27 +72,16 @@ public abstract class TaskManagerTest <T extends TaskManager> {
 
         assertEquals(TaskStatus.IN_PROGRESS, taskManager.getTaskByID(task.getId()).getStatus());
     }
-
-    @Test
-    public void updateSubtaskStatusToInProgress() {
+    @ParameterizedTest
+    @EnumSource(TaskStatus.class)
+    public void updateSubtaskStatusWithAllStatuses(TaskStatus status) {
         Epic epic = createEpic();
         Subtask subtask = createSubtask(epic);
-        subtask.setStatus(TaskStatus.IN_PROGRESS);
+        subtask.setStatus(status);
         taskManager.updateSubtask(subtask);
 
-        assertEquals(TaskStatus.IN_PROGRESS, taskManager.getSubtaskByID(subtask.getId()).getStatus());
-        assertEquals(TaskStatus.IN_PROGRESS, taskManager.getEpicByID(epic.getId()).getStatus());
-    }
-
-    @Test
-    public void updateSubtaskStatusToDone() {
-        Epic epic = createEpic();
-        Subtask subtask = createSubtask(epic);
-        subtask.setStatus(TaskStatus.DONE);
-        taskManager.updateSubtask(subtask);
-
-        assertEquals(TaskStatus.DONE, taskManager.getSubtaskByID(subtask.getId()).getStatus());
-        assertEquals(TaskStatus.DONE, taskManager.getEpicByID(epic.getId()).getStatus());
+        assertEquals(status, taskManager.getSubtaskByID(subtask.getId()).getStatus());
+        assertEquals(status, taskManager.getEpicByID(epic.getId()).getStatus());
     }
 
     @Test
