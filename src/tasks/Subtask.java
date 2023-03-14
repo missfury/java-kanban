@@ -2,7 +2,7 @@ package tasks;
 
 public class Subtask extends Task {
 
-    private final Integer idEpic;
+    private Integer idEpic;
 
 
     public Subtask(String name, String description, TaskStatus status, Integer idEpic) {
@@ -10,10 +10,17 @@ public class Subtask extends Task {
         this.idEpic = idEpic;
     }
 
+    public Subtask(String name, String description, Integer idEpic) {
+        super(0, name, description);
+        this.idEpic = idEpic;
+    }
+
     public Subtask(Integer id, String name, String description, TaskStatus status, Integer idEpic) {
         super(id, name, description, status);
         this.idEpic = idEpic;
     }
+
+
 
     public Integer getIdEpic() {
         return idEpic;

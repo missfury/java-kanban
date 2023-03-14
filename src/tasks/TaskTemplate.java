@@ -1,18 +1,27 @@
 package tasks;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class TaskTemplate {
     protected Integer id;
     protected String name;
     protected String description;
     protected TaskStatus status;
     protected TypeOfTask type;
+    protected Duration duration;
+    protected LocalDateTime startTime;
 
-    public TaskTemplate(Integer id, String name, String description, TaskStatus status, TypeOfTask type) {
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
+
+    public TaskTemplate(Integer id, String name, String description, TaskStatus status,TypeOfTask type) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.status = status;
         setType();
+        this.duration = Duration.ZERO;
     }
 
     public TaskTemplate(Integer id, String name, String description) {
@@ -20,6 +29,7 @@ public class TaskTemplate {
         this.name = name;
         this.description = description;
         setType();
+        this.duration = Duration.ZERO;
     }
 
     public TaskTemplate(Integer id, String name, String description, TaskStatus status) {
@@ -27,7 +37,10 @@ public class TaskTemplate {
         this.description = description;
         this.status = status;
         setType();
+        this.duration = Duration.ZERO;
     }
+
+
 
     @Override
     public boolean equals(Object obj) {
@@ -86,6 +99,46 @@ public class TaskTemplate {
 
     public TypeOfTask getType() {
         return type;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public void setDuration(long minutes) {
+        this.duration = Duration.ofMinutes(minutes);
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime setStartTime(String startTime) {
+        this.startTime = LocalDateTime.parse(startTime, FORMATTER);
+        return null;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime != null && duration != null) {
+            return startTime.plus(duration);
+        }
+        return null;
+    }
+
+    public void resetDuration() {
+        duration = Duration.ZERO;
+    }
+
+    public void resetStartTime() {
+        startTime = null;
     }
 
     public String toStringFromFile() {

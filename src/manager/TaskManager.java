@@ -6,6 +6,7 @@ import tasks.Subtask;
 import tasks.Task;
 import tasks.TaskTemplate;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface TaskManager {
@@ -13,11 +14,14 @@ public interface TaskManager {
     // Добавление задачи типа "одиночная задача"
     Integer addTask(Task task);
 
+
     // Добавление задачи типа "масштабная задача с подзадачами"
     Integer addEpic (Epic epic);
 
+
     // Добавление задачи типа "подзадача в составе масштабной задачи"
     Integer addSubtask(Subtask subtask);
+
 
     //Обновление одиночной задачи
     void updateTask(Task task);
@@ -76,9 +80,10 @@ public interface TaskManager {
     // Получить список просмотренных
     List<TaskTemplate> history();
 
-    void save();
+    public void updateEpicStartTimeAndDuration(Integer id);
 
-
+    Collection<TaskTemplate> getPrioritizedTasks();
+    Collection<TaskTemplate> getAllTasks();
 
 
 

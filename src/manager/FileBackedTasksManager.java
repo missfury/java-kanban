@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager {
@@ -17,7 +19,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     private Path fileName;
     private static final Path DEFAULT_FILE = Paths.get("./data/data.csv");
     private static final String SEPARATOR = ",";
-    private static final String HEAD = "id,type,name,status,description,epicID";
+    private static final String HEAD = "id,type,name,status,description,duration_in_minutes, start_time, epic/subtasks";
     private static final String NEW_LINE = "\n";
 
     static InMemoryTaskManager taskManager = new InMemoryTaskManager();
@@ -60,7 +62,9 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     private String toString(TaskTemplate task) {
         String result = task.getId() + SEPARATOR + task.getType() + SEPARATOR
                 + task.getName() + SEPARATOR + task.getStatus() + SEPARATOR
-                + task.getDescription();
+                + task.getDescription() + SEPARATOR
+                + task.getDuration().toMinutes() + SEPARATOR
+                + task.getStartTime();
         if (task.getType().equals(TypeOfTask.SUBTASK)) {
             Subtask subtask = (Subtask) task;
             result += SEPARATOR + subtask.getIdEpic();
@@ -128,7 +132,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     }
 
     private static TaskTemplate fromString(String value) {
-        int arrayIndexForEpicsOrSubtasks = 5;
+        int arrayIndexForEpicsOrSubtasks = 7;
         TaskTemplate task;
 
         String[] values = value.split(SEPARATOR);
@@ -138,9 +142,22 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             String name = values[2];
             TaskStatus status = TaskStatus.valueOf(values[3]);
             String description = values[4];
+            LocalDateTime startTime;
+            Duration duration;
+            if (values[5].equals("null")) {
+                duration = null;
+            } else {
+                duration = Duration.ofMinutes(Long.parseLong(values[5]));
+            }
+            if (values[6].equals("null")) {
+                startTime = null;
+            } else {
+                startTime = LocalDateTime.parse(values[6]);
+            }
+
 
             if (type.equals(TypeOfTask.SUBTASK)) {
-                Integer idEpic = Integer.parseInt(values[5]);
+                Integer idEpic = Integer.parseInt(values[7]);
                 task = new Subtask(name, description, status, idEpic);
             } else if (type.equals(TypeOfTask.EPIC)) {
                 List<Integer> subtaskList = new ArrayList<>();
@@ -241,7 +258,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     @Override
     public Integer addTask(Task task) {
-        setNextId(nextId);
         Integer taskId = super.addTask(task);
         this.save();
         return taskId;
@@ -249,7 +265,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     @Override
     public Integer addEpic(Epic epic) {
-        setNextId(nextId);
         Integer epicId = super.addEpic(epic);
         this.save();
         return epicId;
@@ -257,7 +272,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
     @Override
     public Integer addSubtask(Subtask subtask) {
-        setNextId(nextId);
         Integer subtaskId = super.addSubtask(subtask);
         this.save();
         return subtaskId;
@@ -381,4 +395,3 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
 
 }
-

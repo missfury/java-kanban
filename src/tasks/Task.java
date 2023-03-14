@@ -1,9 +1,15 @@
 package tasks;
 
+import java.time.Duration;
+
 public class Task extends TaskTemplate {
 
     public Task(String name, String description, TaskStatus status) {
         super(0, name, description, status);
+    }
+
+    public Task(String name, String description) {
+        super(0, name, description);
     }
 
     //для взаимодействия с id при изменении задачи
@@ -26,6 +32,8 @@ public class Task extends TaskTemplate {
                 ", taskName='" + getName() + '\'' +
                 ", taskDescription='" + getDescription() + "'" +
                 ", taskStatus='" + getStatus() +
+                ", taskStart='" + getStartTime() +
+                ", taskDuration='" + getDuration().toMinutes() +
                 "'}";
     }
 
@@ -33,5 +41,13 @@ public class Task extends TaskTemplate {
     public String toStringFromFile() {
         String result = super.toStringFromFile();
         return result;
+    }
+    @Override
+    public void resetDuration() {
+        duration = Duration.ZERO;
+    }
+    @Override
+    public void resetStartTime() {
+        startTime = null;
     }
 }

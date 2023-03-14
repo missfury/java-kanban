@@ -19,4 +19,7 @@ public interface HistoryManager {
     void updateId(TaskTemplate task);
 
     int getSize();
+
+
+
 }
