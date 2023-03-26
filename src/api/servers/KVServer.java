@@ -83,10 +83,10 @@ public class KVServer {
                     return;
                 }
                 data.put(key, value);
-                System.out.println("Значение для ключа " + key + " успешно обновлено!");
+                System.out.println(String.format("Значение для ключа %s успешно обновлено!", key));
                 h.sendResponseHeaders(200, 0);
             } else {
-                System.out.println("/save ждёт POST-запрос, а получил: " + h.getRequestMethod());
+                System.out.println(String.format("/save ждёт POST-запрос, а получил: %s", h.getRequestMethod()));
                 h.sendResponseHeaders(405, 0);
             }
         } finally {
@@ -100,7 +100,7 @@ public class KVServer {
             if ("GET".equals(h.getRequestMethod())) {
                 sendText(h, apiToken);
             } else {
-                System.out.println("/register ждёт GET-запрос, а получил " + h.getRequestMethod());
+                System.out.println(String.format("/register ждёт GET-запрос, а получил: %s", h.getRequestMethod()));
                 h.sendResponseHeaders(405, 0);
             }
         } finally {
@@ -109,9 +109,9 @@ public class KVServer {
     }
 
     public void start() {
-        System.out.println("Запускаем сервер на порту " + PORT);
-        System.out.println("Открой в браузере http://localhost:" + PORT + "/");
-        System.out.println("API_TOKEN: " + apiToken);
+        System.out.println(String.format("Запускаем сервер на порту %s", PORT));
+        System.out.println(String.format("Откройте в браузере http://localhost:%s/", PORT));
+        System.out.println(String.format("API_TOKEN: %s", apiToken));
         server.start();
     }
     @AfterEach
@@ -121,12 +121,13 @@ public class KVServer {
     }
 
     private String generateApiToken() {
-        return "" + System.currentTimeMillis();
+        return String.format("%s",System.currentTimeMillis());
     }
 
     protected boolean hasAuth(HttpExchange h) {
         String rawQuery = h.getRequestURI().getRawQuery();
-        return rawQuery != null && (rawQuery.contains("API_TOKEN=" + apiToken) || rawQuery.contains("API_TOKEN=DEBUG"));
+        return rawQuery != null && (rawQuery.contains(String.format("API_TOKEN=%s",apiToken)) ||
+        rawQuery.contains("API_TOKEN=DEBUG"));
     }
 
     protected String readText(HttpExchange h) throws IOException {

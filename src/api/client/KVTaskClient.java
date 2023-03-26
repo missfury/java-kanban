@@ -15,13 +15,13 @@ public class KVTaskClient {
     protected String apiToken;
 
     public KVTaskClient() {
-        url = "http://localhost:" + PORT;
+        url = String.format("http://localhost:%d", PORT);
         apiToken = register(url);
     }
 
     public String register(String url) {
         HttpClient client = HttpClient.newHttpClient();
-        URI uri = URI.create(url + "/register");
+        URI uri = URI.create(String.format("%s/register", url));
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
                 .GET()
@@ -46,7 +46,7 @@ public class KVTaskClient {
             return;
         }
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/save/" + key + "?API_TOKEN=" + apiToken))
+                .uri(URI.create(String.format("%s/save/%s?API_TOKEN=%s", url, key, apiToken)))
                 .POST(HttpRequest.BodyPublishers.ofString(json, DEFAULT_CHARSET))
                 .build();
         try {
@@ -62,7 +62,7 @@ public class KVTaskClient {
             return "API_TOKEN не присвоен";
         }
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(url + "/load/" + key + "?API_TOKEN=" + apiToken))
+                .uri(URI.create(String.format("%s/load/%s?API_TOKEN=%s", url, key, apiToken)))
                 .GET()
                 .build();
         try {
