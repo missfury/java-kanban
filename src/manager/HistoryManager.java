@@ -7,7 +7,7 @@ import java.util.List;
 public interface HistoryManager {
 
     // Отметить задачу в листе просмотренных
-    void historyAdd(TaskTemplate task);
+    void add(TaskTemplate task);
 
     // Отображение последних просмотренных пользователем задач
     List<TaskTemplate>  getHistory();

@@ -15,13 +15,14 @@ public class TaskTemplate {
 
     public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
 
-    public TaskTemplate(Integer id, String name, String description, TaskStatus status,TypeOfTask type) {
-        this.id = id;
+    public TaskTemplate (String name, String description, TaskStatus status,
+    Duration duration, LocalDateTime startTime) {
         this.name = name;
         this.description = description;
         this.status = status;
         setType();
-        this.duration = Duration.ZERO;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public TaskTemplate(Integer id, String name, String description) {

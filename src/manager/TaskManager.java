@@ -84,6 +84,7 @@ public interface TaskManager {
 
     Collection<TaskTemplate> getPrioritizedTasks();
     Collection<TaskTemplate> getAllTasks();
+    List<TaskTemplate> getHistory();
 
 
 

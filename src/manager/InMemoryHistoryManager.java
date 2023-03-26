@@ -12,12 +12,12 @@ public class InMemoryHistoryManager implements HistoryManager {
     public Node<TaskTemplate> head;
     public Node<TaskTemplate> tail;
     private  int size = 0;
-    private Map<Integer, Node<TaskTemplate>> historyMap = new HashMap<>();
+    private final Map<Integer, Node<TaskTemplate>> historyMap = new HashMap<>();
 
 
     // Отметить задачу в листе просмотренных
     @Override
-    public void historyAdd(TaskTemplate task) {
+    public void add(TaskTemplate task) {
         if (task != null) {
             int idTask = task.getId();
             remove(idTask);
@@ -28,6 +28,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             removeNode(tail);
         }
     }
+
 
     // Отображение последних просмотренных пользователем задач
     @Override

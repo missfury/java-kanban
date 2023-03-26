@@ -1,6 +1,7 @@
 package tasks;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class Task extends TaskTemplate {
 
@@ -18,6 +19,13 @@ public class Task extends TaskTemplate {
     }
     public Task(Integer id, String name, String description) {
         super(id, name, description);
+    }
+
+    public Task(String name, String description, TaskStatus status,
+                Duration duration, LocalDateTime startTime) {
+        super(name, description,status,
+                 duration, startTime);
+
     }
 
     public TypeOfTask getType() {

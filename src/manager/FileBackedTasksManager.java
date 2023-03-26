@@ -186,6 +186,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         return result;
     }
 
+
+
     public static FileBackedTasksManager loadFromFile(Path file) {
         int idCounter = 0;
         Integer intermediate;
@@ -241,7 +243,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                         ArrayList<Integer> historyIdTasks = (ArrayList<Integer>) historyFromString(line);
                         for (int id : historyIdTasks) {
                             TaskTemplate task = taskMap.get(id);
-                            fileManager.historyManager.historyAdd(task);
+                            fileManager.historyManager.add(task);
                         }
 
                     }
@@ -387,6 +389,45 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         taskManager.setNextId(list.size());
         return list;
     }
+
+    @Override
+    public List<TaskTemplate> getHistory() {
+        return historyManager.getHistory();
+    }
+
+    public void loadTask(Task task) {
+        tasks.put(task.getId(), task);
+    }
+
+    public void loadEpic(Epic epic) {
+        List<Integer> epicList = updateSubtasksEpicInside(epic);
+        epic.setSubtaskList(epicList);
+        epics.put(epic.getId(), epic);
+    }
+
+    public void loadSubtask(Subtask subtask) {
+        subtasks.put(subtask.getId(), subtask);
+        List<Integer> subtaskList = updateSubtasksEpicInside(epics.get(subtask.getIdEpic()));
+        Epic epic = epics.get(subtask.getIdEpic());
+        updateEpicStartTimeAndDuration(subtask.getIdEpic());
+        subtaskList.add(subtask.getId());
+        epic.setSubtaskList(subtaskList);
+        epics.put(subtask.getIdEpic(), epic);
+    }
+
+    protected TaskTemplate findTask(Integer taskId){
+        if (tasks.containsKey(taskId)){
+            return tasks.get(taskId);
+        }
+
+        if (subtasks.containsKey(taskId)){
+            return subtasks.get(taskId);
+        }
+
+        return epics.get(taskId);
+    }
+
+
 
 
 

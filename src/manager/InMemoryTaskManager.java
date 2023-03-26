@@ -243,7 +243,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Task getTaskByID(Integer id) {
         setNextId(nextId);
         Task task = tasks.getOrDefault(id, null);
-        historyManager.historyAdd(task);
+        historyManager.add(task);
 
         return task;
 
@@ -254,7 +254,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic getEpicByID(Integer id) {
         setNextId(nextId);
         Epic epic = epics.getOrDefault(id, null);
-        historyManager.historyAdd(epic);
+        historyManager.add(epic);
         return epic;
     }
 
@@ -262,7 +262,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubtaskByID(Integer id) {
         setNextId(nextId);
-        historyManager.historyAdd(subtasks.get(id));
+        historyManager.add(subtasks.get(id));
         updateEpicStartTimeAndDuration(subtasks.get(id).getIdEpic());
         return subtasks.get(id);
     }
@@ -332,6 +332,11 @@ public class InMemoryTaskManager implements TaskManager {
         taskMap.putAll(epics);
         taskMap.putAll(subtasks);
         return taskMap.values();
+    }
+
+    @Override
+    public List<TaskTemplate> getHistory() {
+        return historyManager.getHistory();
     }
 
     @Override

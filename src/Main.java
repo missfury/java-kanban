@@ -1,18 +1,25 @@
+import api.servers.HttpTaskServer;
+import api.servers.KVServer;
+import manager.HTTPTaskManager;
 import manager.Managers;
 import manager.TaskManager;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
+import java.io.IOException;
+
 import static tasks.TaskStatus.IN_PROGRESS;
 import static tasks.TaskStatus.NEW;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+
+        new KVServer().start();
 
         TaskManager manager = Managers.getDefault();
-        manager.getPrioritizedTasks();
+        new HttpTaskServer(manager).start();
 
         manager.addTask(new Task("Задача 1", "Описание задачи 1", NEW));
         manager.addTask(new Task("Задача 2", "Описание задачи 2", NEW));
@@ -62,8 +69,6 @@ public class Main {
         manager.updateTask(manager.getTaskByID(8));
         manager.updateTask(task4);
         manager.updateTask(manager.getTaskByID(2));
-        System.out.println("\r\nИстория просмотров");
-        System.out.println(manager.history().toString().replaceAll("^\\[|\\]$", ""));
         System.out.println("\r\nСписок подзадач");
         System.out.println(manager.getSubtaskList().toString().replaceAll("^\\[|\\]$", ""));
         System.out.println("\r\nСписок масштабных задач");
@@ -72,6 +77,20 @@ public class Main {
         System.out.println(manager.getTaskList().toString().replaceAll("^\\[|\\]$", ""));
         System.out.println("\r\nСписок задач по приоритету");
         System.out.println(manager.getPrioritizedTasks().toString().replaceAll("^\\[|\\]$", ""));
+
+        HTTPTaskManager taskManager = new HTTPTaskManager();
+        taskManager.load();
+        System.out.println("HTTPTaskManager восстановлен из KV");
+
+        System.out.println("\r\nСписок подзадач");
+        System.out.println(taskManager.getSubtaskList().toString().replaceAll("^\\[|\\]$", ""));
+        System.out.println("\r\nСписок масштабных задач");
+        System.out.println(taskManager.getEpicList().toString().replaceAll("^\\[|\\]$", ""));
+        System.out.println("\r\nСписок одиночных задач");
+        System.out.println(taskManager.getTaskList().toString().replaceAll("^\\[|\\]$", ""));
+        System.out.println("\r\nСписок задач по приоритету");
+        System.out.println(taskManager.getPrioritizedTasks().toString().replaceAll("^\\[|\\]$", ""));
+
 
     }
 }
